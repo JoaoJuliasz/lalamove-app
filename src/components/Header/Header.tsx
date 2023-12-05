@@ -11,13 +11,18 @@ const Header = () => {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         justifyContent: 'center',
-        height: 60,
-        padding: 15,
+        alignItems: 'flex-end',
+        flexDirection: 'row',
+        borderBottomWidth: 2,
+        borderColor: '#ccc',
+        maxHeight: 100
     }, 
     text: {
-        fontSize: 23,
-        textAlign: 'center'
+        fontSize: 24,
+        textAlign: 'center',
+        padding: 10
     }
 })
 
