@@ -1,6 +1,5 @@
-import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import useGetDeliveries from '../../hooks/useGetDeliveries/useGetDeliveries';
-import { Delivery } from '../../types/delivery.types';
 import DeliveryCard from './components/DeliveryCard/DeliveryCard';
 
 const Home = () => {
@@ -22,7 +21,6 @@ const Home = () => {
     return (
         <View style={styles.container}>
             <FlatList
-                style={styles.list}
                 data={data}
                 renderItem={({ item }) => <DeliveryCard key={item.id} delivery={item} />} />
         </View>
@@ -35,9 +33,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         justifyContent: 'center',
     },
-    list: {
-        flex: 1
-    }
 });
 
 

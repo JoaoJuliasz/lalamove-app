@@ -1,15 +1,21 @@
+import Main from './src/container/Main/Main';
 import { StatusBar } from 'expo-status-bar';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import Main from './src/pages/Main/Main';
+import { NavigationContainer } from '@react-navigation/native';
 
 const queryClient = new QueryClient()
+
 export default function App() {
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Main />
+    <>
       <StatusBar style="auto" />
-    </QueryClientProvider>
+      <NavigationContainer>
+        <QueryClientProvider client={queryClient}>
+          <Main />
+        </QueryClientProvider>
+      </NavigationContainer>
+    </>
   );
 }
 

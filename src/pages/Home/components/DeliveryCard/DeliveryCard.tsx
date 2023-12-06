@@ -1,4 +1,5 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Delivery } from '../../../../types/delivery.types';
 
 type Props = {
@@ -7,16 +8,24 @@ type Props = {
 
 const DeliveryCard = ({ delivery }: Props) => {
 
+    const navigation = useNavigation<any>()
+
     const getDeliveryPrice = (): string => {
         const deliveryFee = parseFloat(delivery.deliveryFee.replace('$', ''))
         const surcharge = parseFloat(delivery.surcharge.replace('$', ''))
         return `$${(surcharge + deliveryFee).toFixed(2)}`
     }
 
+    const navigate = () => {
+        navigation.navigate('Details', {
+            delivery
+        })
+    }
+
     if (!delivery.route) return null
 
     return (
-        <View style={style.container}>
+        <TouchableOpacity style={style.container} onPress={navigate}>
             <Image source={{
                 uri: delivery.goodsPicture,
                 width: 84,
@@ -27,7 +36,7 @@ const DeliveryCard = ({ delivery }: Props) => {
                 <Text style={style.infoText}>To: {delivery.route?.end}</Text>
             </View>
             <Text style={style.price}>{getDeliveryPrice()}</Text>
-        </View>
+        </TouchableOpacity>
     );
 };
 
