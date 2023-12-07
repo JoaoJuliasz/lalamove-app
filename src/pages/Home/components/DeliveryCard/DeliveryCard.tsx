@@ -1,6 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { Delivery } from '../../../../types/delivery.types';
+import { getDeliveryPrice } from '../../../../utils/utils';
+import { style } from './style';
 
 type Props = {
     delivery: Delivery
@@ -9,12 +11,6 @@ type Props = {
 const DeliveryCard = ({ delivery }: Props) => {
 
     const navigation = useNavigation<any>()
-
-    const getDeliveryPrice = (): string => {
-        const deliveryFee = parseFloat(delivery.deliveryFee.replace('$', ''))
-        const surcharge = parseFloat(delivery.surcharge.replace('$', ''))
-        return `$${(surcharge + deliveryFee).toFixed(2)}`
-    }
 
     const navigate = () => {
         navigation.navigate('Details', {
@@ -35,33 +31,9 @@ const DeliveryCard = ({ delivery }: Props) => {
                 <Text style={style.infoText}>From: {delivery.route?.start}</Text>
                 <Text style={style.infoText}>To: {delivery.route?.end}</Text>
             </View>
-            <Text style={style.price}>{getDeliveryPrice()}</Text>
+            <Text style={style.price}>{getDeliveryPrice(delivery.deliveryFee, delivery.surcharge)}</Text>
         </TouchableOpacity>
     );
 };
-
-const style = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        flex: 1,
-        margin: 10,
-        borderColor: '#ccc',
-        borderWidth: 2
-    },
-    infos: {
-        flex: 1,
-        justifyContent: 'center',
-        marginLeft: 8
-    },
-    infoText: {
-        fontSize: 16,
-        padding: 6
-    },
-    price: {
-        fontSize: 16,
-        alignSelf: 'flex-end',
-        padding: 8
-    }
-})
 
 export default DeliveryCard;
