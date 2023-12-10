@@ -4,15 +4,16 @@ import DeliveryCard from './components/DeliveryCard/DeliveryCard';
 
 const Home = () => {
 
-    const { data, isLoading, error } = useGetDeliveries()
+    // const { data, isLoading, error } = useGetDeliveries()
+    const { deliveries, loading} = useGetDeliveries()
 
-    if (error) return (
-        <View>
-            <Text>Ops! Something went wrong...</Text>
-        </View>
-    )
+    // if (error) return (
+    //     <View>
+    //         <Text>Ops! Something went wrong...</Text>
+    //     </View>
+    // )
 
-    if (isLoading) return (
+    if (loading) return (
         <View>
             <Text>Loading...</Text>
         </View>
@@ -21,8 +22,10 @@ const Home = () => {
     return (
         <View style={styles.container}>
             <FlatList
-                data={data}
-                renderItem={({ item }) => <DeliveryCard key={item.id} delivery={item} />} />
+                data={deliveries}
+                renderItem={({ item }) => <DeliveryCard key={item.id} delivery={item} />} 
+                onScrollEndDrag={(e) => console.log(e)}
+                />
         </View>
     );
 };

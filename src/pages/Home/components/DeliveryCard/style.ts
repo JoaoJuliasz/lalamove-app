@@ -17,9 +17,17 @@ export const style = StyleSheet.create({
         fontSize: 16,
         padding: 6
     },
+    wrapper: {
+        justifyContent: 'flex-end',
+        height: '100%',
+        alignItems: 'center'
+    },
+    favorite: {
+        padding: 10
+    },
     price: {
-        fontSize: 16,
         alignSelf: 'flex-end',
-        padding: 8
-    }
+        fontSize: 16,
+        padding: 8,
+    },
 })
