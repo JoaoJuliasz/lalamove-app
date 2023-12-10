@@ -1,31 +1,35 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
 import useGetDeliveries from '../../hooks/useGetDeliveries/useGetDeliveries';
 import DeliveryCard from './components/DeliveryCard/DeliveryCard';
 
 const Home = () => {
+    const { deliveries, loading, fetchDeliveriesData } = useGetDeliveries()
 
-    // const { data, isLoading, error } = useGetDeliveries()
-    const { deliveries, loading} = useGetDeliveries()
-
-    // if (error) return (
-    //     <View>
-    //         <Text>Ops! Something went wrong...</Text>
-    //     </View>
-    // )
-
-    if (loading) return (
+    if (deliveries.length === 0) return (
         <View>
             <Text>Loading...</Text>
         </View>
     )
 
+    const renderFooter = () => {
+        if (!loading) return null;
+        return (
+            <View>
+                <ActivityIndicator />
+            </View>
+        );
+    }
+
     return (
         <View style={styles.container}>
             <FlatList
                 data={deliveries}
-                renderItem={({ item }) => <DeliveryCard key={item.id} delivery={item} />} 
-                onScrollEndDrag={(e) => console.log(e)}
-                />
+                renderItem={({ item }) => <DeliveryCard key={item.id} delivery={item} />}
+                keyExtractor={item => item.id}
+                onEndReached={fetchDeliveriesData}
+                onEndReachedThreshold={0.1}
+                ListFooterComponent={renderFooter}
+            />
         </View>
     );
 };

@@ -1,16 +1,11 @@
 import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
 import { Delivery } from '../../types/delivery.types';
-const fetchDeliveriesData = async () => {
-    const data = await axios.get("https://6285f87796bccbf32d6c0e6a.mockapi.io/deliveries")
-    return data.data
-}
 
 const useGetDeliveries = () => {
-    // return useQuery(['deliveries'], fetchDeliveriesData)
     const [loading, setLoading] = useState<boolean>(false)
     const [deliveries, setDeliveries] = useState<Delivery[]>([])
+    const [page, setPage] = useState<number>(0)
 
     const generateUUID = () => {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -20,21 +15,34 @@ const useGetDeliveries = () => {
         });
     }
 
-    const fetchDeliveriesData = useCallback(async (offset: number = 0) => {
-        setLoading(true)
-        try {
-            const data = await axios.get(`https://6285f87796bccbf32d6c0e6a.mockapi.io/deliveries?offset=${offset}`)
-            const dataModified = data.data
-            for (let i = 0; i < 16; i++) {
-                dataModified.push({ ...dataModified[0], id: generateUUID()})
-            }
-            setDeliveries(dataModified)
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setLoading(false)
+    const fetchDeliveriesData = useCallback(async () => {
+        if (loading) {
+            return;
         }
-    }, [])
+        setLoading(true);
+
+        const nextPage = deliveries.length === 0 ? 1 : page + 1;
+
+        try {
+            const response = await axios.get(`https://6285f87796bccbf32d6c0e6a.mockapi.io/deliveries?offset=${nextPage}`);
+            const newData = response.data;
+
+            if (deliveries.length > 0) {
+                const dataWithNewIds = newData.map((value: Delivery) => ({
+                    ...value,
+                    id: generateUUID(),
+                }));
+                setDeliveries(prevDeliveries => [...prevDeliveries, ...dataWithNewIds]);
+                setPage(nextPage);
+            } else {
+                setDeliveries(newData)
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }, [page, loading, deliveries]);
 
     useEffect(() => {
         fetchDeliveriesData()
