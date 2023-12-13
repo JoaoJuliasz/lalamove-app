@@ -8,39 +8,7 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 
 const Home = () => {
 
-    const [showSearch, setShowSearch] = useState<boolean>(false)
-    const [searchValue, setSearchValue] = useState<string>("")
-
     const { deliveries, loading, fetchDeliveriesData } = useGetDeliveries()
-
-    const navigation = useNavigation()
-
-    const filteredDeliveries = useMemo(() => {
-        return deliveries.filter(item => item.route?.start.toLowerCase().includes(searchValue.toLowerCase()))
-    }, [deliveries, searchValue])
-
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            headerSearchBarOptions: {
-                onChangeText: (event: any) => setSearchValue(event.nativeEvent.text),
-                placeholder: "Search",
-                cancelButtonText: "Cancel",
-                searchValue: searchValue,
-                hideWhenScrolling: true,
-                autoCapitalize: "words",
-                shouldShowHintSearchIcon: true,
-            },
-            headerRight: () => (
-                // !showSearch ?
-                <View style={{ position: 'absolute', paddingRight: 16 }}>
-                    <AntDesign name="search1" size={24} color="black" onPress={() => setShowSearch(true)} />
-                </View>
-                // :
-                // <SearchBar />
-            ),
-        });
-    }, [navigation])
-
     if (deliveries.length === 0) return (
         <View>
             <Text>Loading...</Text>
@@ -59,12 +27,13 @@ const Home = () => {
     return (
         <View style={styles.container}>
             <FlatList
-                data={filteredDeliveries}
+                data={deliveries}
                 renderItem={({ item }) => <DeliveryCard key={item.id} delivery={item} />}
                 keyExtractor={item => item.id}
                 onEndReached={fetchDeliveriesData}
                 onEndReachedThreshold={0.1}
                 ListFooterComponent={renderFooter}
+                contentContainerStyle={styles.list}
             />
         </View>
     );
@@ -76,6 +45,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         justifyContent: 'center',
     },
+    list: {
+        // paddingTop: 150
+    }
 });
 
 
